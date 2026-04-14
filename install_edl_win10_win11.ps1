@@ -1,3 +1,10 @@
+# Ensure script runs with elevated privileges
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    echo "This script requires administrator privileges. Restarting as administrator..."
+    Start-Process powershell "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    exit
+}
+
 # --- Check if winget is available ---
 while (!(Get-Command winget -ErrorAction SilentlyContinue)) {
     Write-Host "The 'winget' command is unavailable." -ForegroundColor Red
